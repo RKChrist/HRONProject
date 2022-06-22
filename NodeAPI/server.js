@@ -59,8 +59,6 @@ app.post('/', (req, res) => {
     res.status(422).json(validation(message))
   }
   
-  console.log("This is the first name: " + req.body.FirstName)
-
   try {
     pool.getConnection((err, connection) => {
       
@@ -92,8 +90,6 @@ app.put('/', (req, res) => {
     res.status(422).json(validation(message))
   }
   
-  console.log("This is the first name: " + req.body.FirstName)
-
   try {
     pool.getConnection((err, connection) => {
       
@@ -103,7 +99,7 @@ app.put('/', (req, res) => {
         console.log('connected as id ' + connection.threadId);
         
         const query = 'UPDATE Participants \n' + 
-                      'SET FirstName = "' + req.body.FirstName + '", LastName = "' + req.body.LastName + '" \n';
+                      'SET FirstName = "' + req.body.FirstName + '", LastName = "' + req.body.LastName + '" \n' +
                       'WHERE "ParticipantID == ' + req.body.Id + ";";
         connection.query(query, (err, rows)  => {
             if (err) throw err;
@@ -120,14 +116,13 @@ app.put('/', (req, res) => {
 
 // Put method route
 // Requires a body with FirstName, LastName
-app.put('/', (req, res) => {
-  if(req.body.FirstName == undefined || req.body.FirstName == "" || req.body.LastName == undefined || req.body.LastName == undefined){
-    message = {FirstName: 'Firstname is required.'} + {LastName: 'LastName Is required'} + {Id: 'Id is required'}
+app.delete('/', (req, res) => {
+  //Use authendication header before connection (Sidenote)
+  
+  if(req.body.Id == undefined || req.body.Id == 0){
+    message = {Id: 'ParticipantID is required.'} 
     res.status(422).json(validation(message))
   }
-  
-  console.log("This is the first name: " + req.body.FirstName)
-
   try {
     pool.getConnection((err, connection) => {
       
@@ -136,13 +131,12 @@ app.put('/', (req, res) => {
         
         console.log('connected as id ' + connection.threadId);
         
-        const query = 'UPDATE Participants \n' + 
-                      'SET FirstName = "' + req.body.FirstName + '", LastName = "' + req.body.LastName + '" \n';
-                      'WHERE "ParticipantID == ' + req.body.Id + ";";
+        const query = 'Delete from Participants \n' + 
+                      'WHERE ParticipantID=' + req.body.Id + ";";
         connection.query(query, (err, rows)  => {
             if (err) throw err;
             console.log("1 record inserted");
-            res.status(200).json(success('OK', "1 row Updated", res.statusCode));
+            res.status(200).json(success('OK', "1 row Deleted", res.statusCode));
         });
         connection.release(); // return the connection to pool
     });

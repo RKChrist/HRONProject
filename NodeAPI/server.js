@@ -26,7 +26,7 @@ app.get("/",(req,res) => {
     pool.getConnection((err, connection) => {
         if(err) throw err;
         console.log('connected as id ' + connection.threadId);
-        connection.query('SELECT * from PARTICIPANTS', (err, rows)  => {
+        connection.query('SELECT * from PARTICIPANTS.PARTICIPANTS', (err, rows)  => {
             
             if(err) throw err;
             console.log('The data from users table are: \n', rows);
@@ -67,7 +67,7 @@ app.post('/', (req, res) => {
         
         console.log('connected as id ' + connection.threadId);
         
-        const query = 'Insert into PARTICIPANTS(FirstName, LastName, Token) Values ("'  + req.body.FirstName + '", "' + req.body.LastName + '", "' + token() + '")';
+        const query = 'Insert into PARTICIPANTS.PARTICIPANTS(FirstName, LastName, Token) Values ("'  + req.body.FirstName + '", "' + req.body.LastName + '", "' + token() + '")';
         connection.query(query, (err, rows)  => {
             if (err) throw err;
             console.log("1 record inserted");
@@ -98,7 +98,7 @@ app.put('/', (req, res) => {
         
         console.log('connected as id ' + connection.threadId);
         
-        const query = 'UPDATE Participants \n' + 
+        const query = 'UPDATE PARTICIPANTS.Participants \n' + 
                       'SET FirstName = "' + req.body.FirstName + '", LastName = "' + req.body.LastName + '" \n' +
                       'WHERE "ParticipantID == ' + req.body.Id + ";";
         connection.query(query, (err, rows)  => {
@@ -131,7 +131,7 @@ app.delete('/', (req, res) => {
         
         console.log('connected as id ' + connection.threadId);
         
-        const query = 'Delete from Participants \n' + 
+        const query = 'Delete FROM PARTICIPANTS.Participants \n' + 
                       'WHERE ParticipantID=' + req.body.Id + ";";
         connection.query(query, (err, rows)  => {
             if (err) throw err;
